@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"flow/common"
 	"net"
 )
 
@@ -25,8 +24,9 @@ func SendPacket(conn net.Conn, data []byte) error {
 	}
 
 	w := bytes.NewBuffer(make([]byte, 0, 2+len(data)))
-	common.WriteData(w, uint16(len(data)))
-	common.WriteData(w, data)
+
+	binary.Write(w, binary.LittleEndian, uint16(len(data)))
+	binary.Write(w, binary.LittleEndian, data)
 
 	_, err := conn.Write(w.Bytes())
 	return err
